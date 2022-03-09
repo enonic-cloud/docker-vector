@@ -126,6 +126,5 @@ Metrics:
 # Release
 
 ```
-$ git tag -a 0.20.0-alpine-1 -m "0.20.0-alpine-1"
-$ make docker-push
+$ VERSION=0.20.0-alpine-1 make release
 ```

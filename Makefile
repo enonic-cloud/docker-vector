@@ -13,3 +13,16 @@ docker-build:
 
 docker-push: docker-build
 	echo docker push ${IMAGE_TAG}
+
+release:
+	# Making sure version is set
+	test "${VERSION}" != ""
+	
+	# Tagging git commit
+	git tag -a ${VERSION} -m "${VERSION}"
+
+	# Building and pushing image
+	$(MAKE) docker-push
+
+	# Push tag
+	git push origin ${VERSION}
