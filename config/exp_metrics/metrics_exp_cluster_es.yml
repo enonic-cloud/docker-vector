@@ -1,0 +1,50 @@
+# EXPECTS:  <NONE>
+# PROVIDES: metrics_exp_cluster_es
+
+sources:
+  private_metrics_exp_cluster_es_raw:
+    type: exec
+    mode: scheduled
+    scheduled:
+      exec_interval_secs: ${XP_SCRAPE_INTERVAL:-30}
+    command: ["xp_metrics", "cluster.elasticsearch"]
+    decoding:
+      codec: json
+
+transforms:
+  private_metrics_exp_cluster_es_remap:
+    type: remap
+    drop_on_error: true
+    inputs:
+      - private_metrics_exp_cluster_es_raw
+    source: |-
+      .localNode.isMaster = if .localNode.isMaster == true { 1 } else { 0 }
+      .localNode.numberOfNodesSeen = .localNode.numberOfNodesSeen
+      .state = if .state == "GREEN" { 1 } else { 0 }
+
+  metrics_exp_cluster_es:
+    type: log_to_metric
+    inputs:
+      - private_metrics_exp_cluster_es_remap
+    metrics:
+      - type: gauge
+        field: localNode.isMaster
+        name: cluster_elasticsearch_master
+        namespace: xp
+        tags:
+          collector: cluster.elasticsearch
+          host: ${HOSTNAME}
+      - type: gauge
+        field: localNode.numberOfNodesSeen
+        name: cluster_elasticsearch_nodes
+        namespace: xp
+        tags:
+          collector: cluster.elasticsearch
+          host: ${HOSTNAME}
+      - type: gauge
+        field: state
+        name:  cluster_elasticsearch_state
+        namespace: xp
+        tags:
+          collector: cluster.elasticsearch
+          host: ${HOSTNAME}

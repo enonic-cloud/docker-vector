@@ -1,0 +1,54 @@
+# EXPECTS:  <NONE>
+# PROVIDES: metrics_exp_jvm_threads
+
+sources:
+  private_metrics_exp_jvm_threads_raw:
+    type: exec
+    mode: scheduled
+    scheduled:
+      exec_interval_secs: ${XP_SCRAPE_INTERVAL:-30}
+    command: ["xp_metrics", "jvm.threads"]
+    decoding:
+      codec: json
+
+transforms:
+  metrics_exp_jvm_threads:
+    type: log_to_metric
+    inputs:
+      - private_metrics_exp_jvm_threads_raw
+    metrics:
+      - type: gauge
+        field: daemonCount
+        name: jvm_threads_daemons
+        namespace: xp
+        tags:
+          collector: jvm.threads
+          host: ${HOSTNAME}
+      - type: gauge
+        field: count
+        name: jvm_threads_count
+        namespace: xp
+        tags:
+          collector: jvm.threads
+          host: ${HOSTNAME}
+      - type: gauge
+        field: peak
+        name: jvm_threads_peak
+        namespace: xp
+        tags:
+          collector: jvm.threads
+          host: ${HOSTNAME}
+      - type: gauge
+        field: totalStarted
+        name: jvm_threads_total_started
+        namespace: xp
+        tags:
+          collector: jvm.threads
+          host: ${HOSTNAME}
+      - type: gauge
+        field: numDeadLocks
+        name: jvm_threads_deadlocks
+        namespace: xp
+        tags:
+          collector: jvm.threads
+          host: ${HOSTNAME}

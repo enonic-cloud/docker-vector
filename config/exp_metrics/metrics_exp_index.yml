@@ -1,0 +1,54 @@
+# EXPECTS:  <NONE>
+# PROVIDES: metrics_exp_index
+
+sources:
+  private_metrics_exp_index_raw:
+    type: exec
+    mode: scheduled
+    scheduled:
+      exec_interval_secs: ${XP_SCRAPE_INTERVAL:-30}
+    command: ["xp_metrics", "index"]
+    decoding:
+      codec: json
+
+transforms:
+  metrics_exp_index:
+    type: log_to_metric
+    inputs:
+      - private_metrics_exp_index_raw
+    metrics:
+      - type: gauge
+        field: summary.total
+        name: index_shards_total
+        namespace: xp
+        tags:
+          collector: index
+          host: ${HOSTNAME}
+      - type: gauge
+        field: summary.started
+        name: index_shards_started
+        namespace: xp
+        tags:
+          collector: index
+          host: ${HOSTNAME}
+      - type: gauge
+        field: summary.unassigned
+        name: index_shards_unassigned
+        namespace: xp
+        tags:
+          collector: index
+          host: ${HOSTNAME}
+      - type: gauge
+        field: summary.relocating
+        name: index_shards_relocating
+        namespace: xp
+        tags:
+          collector: index
+          host: ${HOSTNAME}
+      - type: gauge
+        field: summary.initializing
+        name: index_shards_initializing
+        namespace: xp
+        tags:
+          collector: index
+          host: ${HOSTNAME}

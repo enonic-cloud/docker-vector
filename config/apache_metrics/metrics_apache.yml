@@ -1,0 +1,20 @@
+# EXPECTS:  <NONE>
+# PROVIDES: metrics_apache
+
+sources:
+  private_metrics_apache_raw:
+    type: apache_metrics
+    endpoints:
+      - "${APACHE_SCRAPE_ENDPOINT:-http://localhost:80/server-status/?auto}"
+    scrape_interval_secs: ${APACHE_SCRAPE_INTERVAL:-30}
+
+transforms:
+  metrics_apache:
+    type: remap
+    drop_on_error: true
+    inputs:
+      - private_metrics_apache_raw
+    source: |-
+      del(.tags.endpoint)
+      .tags.host = "${HOSTNAME}"
+      .tags.collector = "apache"

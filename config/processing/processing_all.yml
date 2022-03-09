@@ -1,0 +1,55 @@
+# EXPECTS:
+#  - logs_apache
+#  - logs_exp
+#  - metrics_instance
+#  - metrics_apache
+#  - metrics_exp_cluster_es
+#  - metrics_exp_http_threadpool
+#  - metrics_exp_index
+#  - metrics_exp_jvm_gc
+#  - metrics_exp_jvm_info
+#  - metrics_exp_jvm_mem
+#  - metrics_exp_jvm_threads
+# PROVIDES:
+#  - logs_apache
+#  - logs_exp
+
+transforms:
+  logs_processed_all:
+    type: remap
+    inputs:
+      - logs_apache
+      - logs_exp
+    source: |-
+      # Delete all "noise"
+      del(.container_name)
+      del(.container_created_at)
+      del(.container_id)
+      del(.label)
+      del(.source_type)
+      del(.stream)
+      del(.image)
+      del(.host)
+
+      # Add some fields
+      .tags.organization = "${EC_ORG:-NONE}"
+      .tags.project = "${EC_PROJ:-NONE}"
+      .tags.instance = "${EC_INST:-NONE}"
+      .tags.host = "${HOSTNAME}"
+
+  metrics_processed_all:
+    type: remap
+    inputs:
+      - metrics_instance
+      - metrics_apache
+      - metrics_exp_cluster_es
+      - metrics_exp_http_threadpool
+      - metrics_exp_index
+      - metrics_exp_jvm_gc
+      - metrics_exp_jvm_info
+      - metrics_exp_jvm_mem
+      - metrics_exp_jvm_threads
+    source: |-
+      .tags.organization = "${EC_ORG:-NONE}"
+      .tags.project = "${EC_PROJ:-NONE}"
+      .tags.instance = "${EC_INST:-NONE}"

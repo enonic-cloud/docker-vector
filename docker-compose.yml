@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  vector:
+    build: .
+    network_mode: host
+    hostname: "organization-project-instance"
+    environment:
+      EC_ORG: organization
+      EC_PROJ: project
+      EC_INST: instance
+
+      APACHE_SCRAPE_INTERVAL: "10"
+      APACHE_SCRAPE_ENDPOINT: "http://localhost:8000/server-status/?auto"
+
+      XP_SCRAPE_INTERVAL: "10"
+
+      HOST_SCRAPE_INTERVAL: "10"
+      HOST_SCRAPE_DISK_DEVICE: nvme0n1
+      HOST_SCRAPE_NETWORK_DEVICE: wlp59s0
+      
+    volumes:
+      - ./config:/etc/vector:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  exp:
+    image: enonic/xp:7.8.3-ubuntu
+    container_name: exp
+    ports:
+      - 2609:2609
+      - 8080:8080
+
+  apache:
+    image: httpd:2.4
+    container_name: apache
+    ports:
+      - 8000:80
+    volumes:
+      - ./tests/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro  

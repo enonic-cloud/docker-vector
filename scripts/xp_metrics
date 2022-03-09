@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+set -e
+
+exec curl -s -m ${XP_SCRAPE_TIMEOUT:-2} -f ${XP_SCRAPE_ENDPOINT:-http://localhost:2609}/$1

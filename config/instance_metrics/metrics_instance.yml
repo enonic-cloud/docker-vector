@@ -1,0 +1,26 @@
+# EXPECTS:  <NONE>
+# PROVIDES: metrics_instance
+
+sources:
+  metrics_instance:
+    type: host_metrics
+    collectors:
+      - load
+      - host
+      - disk
+      - filesystem
+      - memory
+      - network
+    disk:
+      devices:
+        includes:
+          - "${HOST_SCRAPE_DISK_DEVICE:-sdb}" # Find using 'lsblk'
+    network:
+      devices:
+        includes:
+          - "${HOST_SCRAPE_NETWORK_DEVICE:-ens3}" # Find using 'ip link show'
+    filesystem:
+      devices:
+        includes:
+          - "${HOST_SCRAPE_FILESYSTEM_DEVICE:-overlay}" # Because this is running on docker
+    scrape_interval_secs: ${HOST_SCRAPE_INTERVAL:-30}

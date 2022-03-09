@@ -1,0 +1,12 @@
+# Example outputs
+
+# - metrics_processed_all
+# - logs_processed_all
+
+sinks:
+  debug:
+    type: console
+    inputs:
+      - metrics_processed_all
+    target: stdout
+    encoding: json

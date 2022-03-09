@@ -1,0 +1,48 @@
+# EXPECTS:  <NONE>
+# PROVIDES: metrics_exp_http_threadpool
+
+sources:
+  private_metrics_exp_http_threadpool_raw:
+    type: exec
+    mode: scheduled
+    scheduled:
+      exec_interval_secs: ${XP_SCRAPE_INTERVAL:-30}
+    command: ["xp_metrics", "http.threadpool"]
+    decoding:
+      codec: json
+
+transforms:
+  private_metrics_exp_http_threadpool_remap:
+    type: remap
+    drop_on_error: true
+    inputs:
+      - private_metrics_exp_http_threadpool_raw
+    source: |-
+      .isLowOnThreads = if .isLowOnThreads == true { 1 } else { 0 }
+
+  metrics_exp_http_threadpool:
+    type: log_to_metric
+    inputs:
+      - private_metrics_exp_http_threadpool_remap
+    metrics:
+      - type: gauge
+        field: idleThreads
+        name: http_threadpool_idle
+        namespace: xp
+        tags:
+          collector: http.threadpool
+          host: ${HOSTNAME}
+      - type: gauge
+        field: isLowOnThreads
+        name: http_threadpool_low
+        namespace: xp
+        tags:
+          collector: http.threadpool
+          host: ${HOSTNAME}
+      - type: gauge
+        field: threads
+        name: http_threadpool_threads
+        namespace: xp
+        tags:
+          collector: http.threadpool
+          host: ${HOSTNAME}

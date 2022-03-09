@@ -1,0 +1,31 @@
+# EXPECTS:  <NONE>
+# PROVIDES: logs_apache
+
+sources:
+  private_logs_apache_orginal:
+    type: docker_logs
+    include_containers:
+      - ${APACHE_CONTAINER_NAME:-apache}
+
+transforms:
+  private_logs_apache_basic:
+    type: remap
+    inputs:
+      - private_logs_apache_orginal
+    source: |-
+      .namespace = "apache"
+
+  logs_apache:
+    type: remap
+    inputs:
+      - private_logs_apache_basic
+    source: |-
+      .parsed = parse_apache_log!(.message, "${APACHE_LOG_TYPE:-common}")
+      .ip_address = .parsed.host
+      .method = .parsed.method
+      .path = .parsed.path
+      .protocol = .parsed.protocol
+      .size = .parsed.size
+      .status = .parsed.status
+      del(.parsed)
+      del(.message)

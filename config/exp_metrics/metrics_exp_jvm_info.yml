@@ -1,0 +1,35 @@
+# EXPECTS:  <NONE>
+# PROVIDES: metrics_exp_jvm_info
+
+sources:
+  private_metrics_exp_jvm_info_raw:
+    type: exec
+    mode: scheduled
+    scheduled:
+      exec_interval_secs: ${XP_SCRAPE_INTERVAL:-30}
+    command: ["xp_metrics", "jvm.info"]
+    decoding:
+      codec: json
+
+transforms:
+  metrics_exp_jvm_info:
+    type: log_to_metric
+    inputs:
+      - private_metrics_exp_jvm_info_raw
+    metrics:
+      - type: counter
+        field: upTime
+        name: jvm_info_uptime
+        namespace: xp
+        increment_by_value: true
+        tags:
+          collector: jvm.info
+          host: ${HOSTNAME}
+      - type: counter
+        field: startTime
+        name: jvm_info_start_time
+        namespace: xp
+        increment_by_value: true
+        tags:
+          collector: jvm.info
+          host: ${HOSTNAME}

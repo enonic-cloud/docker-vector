@@ -1,0 +1,76 @@
+# EXPECTS:  <NONE>
+# PROVIDES: metrics_exp_jvm_mem
+
+sources:
+  private_metrics_exp_jvm_mem_raw:
+    type: exec
+    mode: scheduled
+    scheduled:
+      exec_interval_secs: ${XP_SCRAPE_INTERVAL:-30}
+    command: ["xp_metrics", "jvm.memory"]
+    decoding:
+      codec: json
+
+transforms:
+  metrics_exp_jvm_mem:
+    type: log_to_metric
+    inputs:
+      - private_metrics_exp_jvm_mem_raw
+    metrics:
+      - type: gauge
+        field: heap.init
+        name: jvm_memory_heap_init
+        namespace: xp
+        tags:
+          collector: jvm.memory
+          host: ${HOSTNAME}
+      - type: gauge
+        field: heap.max
+        name: jvm_memory_heap_max
+        namespace: xp
+        tags:
+          collector: jvm.memory
+          host: ${HOSTNAME}
+      - type: gauge
+        field: heap.committed
+        name: jvm_memory_heap_committed
+        namespace: xp
+        tags:
+          collector: jvm.memory
+          host: ${HOSTNAME}
+      - type: gauge
+        field: heap.used
+        name: jvm_memory_heap_used
+        namespace: xp
+        tags:
+          collector: jvm.memory
+          host: ${HOSTNAME}
+
+      - type: gauge
+        field: nonHeap.init
+        name: jvm_memory_nonheap_init
+        namespace: xp
+        tags:
+          collector: jvm.memory
+          host: ${HOSTNAME}
+      - type: gauge
+        field: nonHeap.max
+        name: jvm_memory_nonheap_max
+        namespace: xp
+        tags:
+          collector: jvm.memory
+          host: ${HOSTNAME}
+      - type: gauge
+        field: nonHeap.committed
+        name: jvm_memory_nonheap_committed
+        namespace: xp
+        tags:
+          collector: jvm.memory
+          host: ${HOSTNAME}
+      - type: gauge
+        field: nonHeap.used
+        name: jvm_memory_nonheap_used
+        namespace: xp
+        tags:
+          collector: jvm.memory
+          host: ${HOSTNAME}
