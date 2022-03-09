@@ -8,5 +8,6 @@ sinks:
     type: console
     inputs:
       - metrics_processed_all
+      - logs_processed_all
     target: stdout
     encoding: json
