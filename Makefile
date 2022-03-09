@@ -12,7 +12,7 @@ docker-build:
 	docker build -t ${IMAGE_TAG} .
 
 docker-push: docker-build
-	echo docker push ${IMAGE_TAG}
+	docker push ${IMAGE_TAG}
 
 release:
 	# Making sure version is set
