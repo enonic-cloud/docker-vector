@@ -21,7 +21,7 @@ services:
       EC_INST: instance
       
     volumes:
-      - ./config:/etc/vector:ro
+      - ./your_output.yml:/etc/vector/output/output.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock
 ```
 
@@ -121,4 +121,11 @@ Metrics:
   "kind": "absolute",
   "gauge": { "value": 1.0 }
 }
+```
+
+# Release
+
+```
+$ git tag -a 0.20.0-alpine-1 -m "0.20.0-alpine-1"
+$ make docker-push
 ```

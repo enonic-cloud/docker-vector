@@ -1,6 +1,12 @@
 IMAGE_REPO:=enoniccloud/vector
+
+ifneq ("$(shell git tag --points-at HEAD)", "")
 IMAGE_VERSION:=$(shell git tag --points-at HEAD)
-IMAGE_TAG:=${IMAGE_REPO}:${IMAGE_VERSION:-dev}
+else
+IMAGE_VERSION:=dev
+endif
+
+IMAGE_TAG:=${IMAGE_REPO}:${IMAGE_VERSION}
 
 docker-build:
 	docker build -t ${IMAGE_TAG} .
