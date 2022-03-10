@@ -38,7 +38,7 @@ Environmental variables:
 | XP_CONTAINER_NAME | exp | Name of XP container to collect logs |
 | XP_SCRAPE_INTERVAL | 30 | Interval for XP metrics scraping |
 | XP_SCRAPE_ENDPOINT | http://localhost:2609 | Endpoint for Apache metrics scraping |
-| XP_SCRAPE_TIMEOUT | 30 | Timeout for XP metrics scraping |
+| XP_SCRAPE_TIMEOUT | 2 | Timeout for XP metrics scraping |
 | HOST_SCRAPE_DISK_DEVICE | sdb | Disk to scrape for read/write data |
 | HOST_SCRAPE_NETWORK_DEVICE | ens3 | Network card for io metrics |
 | HOST_SCRAPE_FILESYSTEM_DEVICE | overlay | Disk device to scrape for disk usage data |
