@@ -12,6 +12,7 @@ services:
 
       APACHE_SCRAPE_INTERVAL: "10"
       APACHE_SCRAPE_ENDPOINT: "http://localhost:8000/server-status/?auto"
+      APACHE_LOG_TYPE: "common"
 
       XP_SCRAPE_INTERVAL: "10"
 

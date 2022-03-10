@@ -27,5 +27,11 @@ transforms:
       .protocol = .parsed.protocol
       .size = .parsed.size
       .status = .parsed.status
+      .message = .parsed.message
+
+      if "${APACHE_LOG_TYPE:-common}" == "combined" {
+        .agent = .parsed.agent
+        .referrer = .parsed.referrer
+      }
+
       del(.parsed)
-      del(.message)
