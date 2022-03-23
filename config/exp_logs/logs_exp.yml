@@ -6,7 +6,6 @@ sources:
     type: docker_logs
     include_containers:
       - ${XP_CONTAINER_NAME:-exp}
-    auto_partial_merge: false
     multiline:
       start_pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}'
       mode: halt_before
