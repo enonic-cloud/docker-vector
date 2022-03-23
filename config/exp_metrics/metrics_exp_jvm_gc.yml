@@ -1,5 +1,5 @@
 # EXPECTS:  <NONE>
-# PROVIDES: metrics_exp_jvm_gc
+# PROVIDES: metrics_unprocessed_exp_jvm_gc
 
 sources:
   private_metrics_exp_jvm_gc_raw:
@@ -12,7 +12,7 @@ sources:
       codec: json
 
 transforms:
-  metrics_exp_jvm_gc:
+  metrics_unprocessed_exp_jvm_gc:
     type: log_to_metric
     inputs:
       - private_metrics_exp_jvm_gc_raw

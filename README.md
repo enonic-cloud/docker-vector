@@ -2,8 +2,10 @@
 
 - [Usage](#usage)
 - [Configuration](#configuration)
+- [Provided sources](#provided-sources)
 - [Configuring Apache](#configuring-apache)
 - [Example output data](#example-output-data)
+- [Release](#release)
 
 ## Usage
 
@@ -23,6 +25,9 @@ services:
     volumes:
       - ./your_output.yml:/etc/vector/output/output.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock
+      - vector:/var/lib/vector
+volumes:
+  vector:
 ```
 
 ## Configuration
@@ -43,11 +48,26 @@ Environmental variables:
 | HOST_SCRAPE_NETWORK_DEVICE | ens3 | Network card for io metrics |
 | HOST_SCRAPE_FILESYSTEM_DEVICE | overlay | Disk device to scrape for disk usage data |
 | HOST_SCRAPE_INTERVAL | 30 | Interval for XP metrics scraping |
+| BACKUP_CONTAINER_NAME | backup | Name of backup container to collect logs |
+| BACKUP_SCRAPE_ENDPOINT | http://localhost:8000/metrics | Endpoint for Backup metrics scraping |
+| BACKUP_SCRAPE_INTERVAL | 30 | Interval for Backup metrics scraping |
 | EC_ORG | NONE | Enonic Cloud Organization |
 | EC_PROJ | NONE | Enonic Cloud Project |
 | EC_INST | NONE | Enonic Cloud Instance |
 | VECTOR_CONFIG_DIR | /etc/vector/* | Configuration directories |
 | VECTOR_WATCH_CONFIG | /etc/vector | Directory to watch for config changes |
+
+## Provided sources
+
+This image provides you with these sources out of the box:
+
+- `logs.apache`
+- `logs.backup`
+- `logs.xp`
+- `metrics.apache`
+- `metrics.backup`
+- `metrics.xp`
+- `metrics.host`
 
 ## Configuring Apache
 
@@ -123,7 +143,7 @@ Metrics:
 }
 ```
 
-# Release
+## Release
 
 ```
 $ VERSION=0.20.0-alpine-1 make release

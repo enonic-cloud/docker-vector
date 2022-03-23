@@ -1,8 +1,8 @@
 # EXPECTS:  <NONE>
-# PROVIDES: metrics_instance
+# PROVIDES: metrics_unprocessed_host
 
 sources:
-  metrics_instance:
+  metrics_unprocessed_host:
     type: host_metrics
     collectors:
       - load

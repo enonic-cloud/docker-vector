@@ -1,13 +1,15 @@
 # Example outputs
 
-# - metrics_processed_all
-# - logs_processed_all
-
 sinks:
   debug:
     type: console
     inputs:
-      - metrics_processed_all
-      - logs_processed_all
+      # - logs.apache
+      # - logs.backup
+      - logs.xp
+      # - metrics.apache
+      # - metrics.backup
+      # - metrics.xp
+      # - metrics.host
     target: stdout
     encoding: json

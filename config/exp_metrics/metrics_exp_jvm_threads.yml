@@ -1,5 +1,5 @@
 # EXPECTS:  <NONE>
-# PROVIDES: metrics_exp_jvm_threads
+# PROVIDES: metrics_unprocessed_exp_jvm_threads
 
 sources:
   private_metrics_exp_jvm_threads_raw:
@@ -12,7 +12,7 @@ sources:
       codec: json
 
 transforms:
-  metrics_exp_jvm_threads:
+  metrics_unprocessed_exp_jvm_threads:
     type: log_to_metric
     inputs:
       - private_metrics_exp_jvm_threads_raw

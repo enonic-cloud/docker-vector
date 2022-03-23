@@ -1,8 +1,9 @@
 # EXPECTS:
-#  - logs_apache
-#  - logs_exp
-#  - metrics_instance
-#  - metrics_apache
+#  - logs_unprocessed_apache
+#  - logs_unprocessed_backup
+#  - logs_unprocessed_exp
+#  - metrics_unprocessed_apache
+#  - metrics_unprocessed_backup
 #  - metrics_exp_cluster_es
 #  - metrics_exp_http_threadpool
 #  - metrics_exp_index
@@ -10,16 +11,23 @@
 #  - metrics_exp_jvm_info
 #  - metrics_exp_jvm_mem
 #  - metrics_exp_jvm_threads
+#  - metrics_unprocessed_host
 # PROVIDES:
-#  - logs_apache
-#  - logs_exp
+#  - logs.apache
+#  - logs.backup
+#  - logs.xp
+#  - metrics.apache
+#  - metrics.backup
+#  - metrics.xp
+#  - metrics.host
 
 transforms:
-  logs_processed_all:
+  private_logs_processed_all:
     type: remap
     inputs:
-      - logs_apache
-      - logs_exp
+      - logs_unprocessed_apache
+      - logs_unprocessed_backup
+      - logs_unprocessed_exp
     source: |-
       # Delete all "noise"
       del(.container_name)
@@ -37,19 +45,39 @@ transforms:
       .tags.instance = "${EC_INST:-NONE}"
       .tags.host = "${HOSTNAME}"
 
-  metrics_processed_all:
+  logs:
+    type: route
+    inputs:
+      - private_logs_processed_all
+    route:
+      apache: .namespace == "apache"
+      xp: .namespace == "xp"
+      backup: .namespace == "backup"
+
+  private_metrics_processed_all:
     type: remap
     inputs:
-      - metrics_instance
-      - metrics_apache
-      - metrics_exp_cluster_es
-      - metrics_exp_http_threadpool
-      - metrics_exp_index
-      - metrics_exp_jvm_gc
-      - metrics_exp_jvm_info
-      - metrics_exp_jvm_mem
-      - metrics_exp_jvm_threads
+      - metrics_unprocessed_apache
+      - metrics_unprocessed_backup
+      - metrics_unprocessed_exp_cluster_es
+      - metrics_unprocessed_exp_http_threadpool
+      - metrics_unprocessed_exp_index
+      - metrics_unprocessed_exp_jvm_gc
+      - metrics_unprocessed_exp_jvm_info
+      - metrics_unprocessed_exp_jvm_mem
+      - metrics_unprocessed_exp_jvm_threads
+      - metrics_unprocessed_host
     source: |-
       .tags.organization = "${EC_ORG:-NONE}"
       .tags.project = "${EC_PROJ:-NONE}"
       .tags.instance = "${EC_INST:-NONE}"
+
+  metrics:
+    type: route
+    inputs:
+      - private_metrics_processed_all
+    route:
+      apache: .namespace == "apache"
+      xp: .namespace == "xp"
+      backup: .namespace == "backup"
+      host: .namespace == "host"

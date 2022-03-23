@@ -1,0 +1,23 @@
+# EXPECTS:  <NONE>
+# PROVIDES: metrics_unprocessed_backup
+
+sources:
+  private_metrics_backup_raw:
+    type: prometheus_scrape
+    endpoints:
+      - "${BACKUP_SCRAPE_ENDPOINT:-http://localhost:8000/metrics}"
+    scrape_interval_secs: ${BACKUP_SCRAPE_INTERVAL:-30}
+
+transforms:
+  private_metrics_backup_basic:
+    type: remap
+    inputs:
+      - private_metrics_backup_raw
+    source: |-
+      .namespace = "backup"
+
+  metrics_unprocessed_backup:
+    type: filter
+    inputs:
+      - private_metrics_backup_basic
+    condition: starts_with!(.name, "backup_")

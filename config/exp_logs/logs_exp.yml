@@ -1,5 +1,5 @@
 # EXPECTS:  <NONE>
-# PROVIDES: logs_exp
+# PROVIDES: logs_unprocessed_exp
 
 sources:
   private_logs_exp_orginal:
@@ -21,7 +21,7 @@ transforms:
     source: |-
       .namespace = "xp"
 
-  logs_exp:
+  logs_unprocessed_exp:
     type: remap
     inputs:
       - private_logs_exp_basic

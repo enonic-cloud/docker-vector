@@ -1,5 +1,5 @@
 # EXPECTS:  <NONE>
-# PROVIDES: metrics_exp_cluster_es
+# PROVIDES: metrics_unprocessed_exp_cluster_es
 
 sources:
   private_metrics_exp_cluster_es_raw:
@@ -22,7 +22,7 @@ transforms:
       .localNode.numberOfNodesSeen = .localNode.numberOfNodesSeen
       .state = if .state == "GREEN" { 1 } else { 0 }
 
-  metrics_exp_cluster_es:
+  metrics_unprocessed_exp_cluster_es:
     type: log_to_metric
     inputs:
       - private_metrics_exp_cluster_es_remap

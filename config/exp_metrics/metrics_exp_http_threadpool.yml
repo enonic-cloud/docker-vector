@@ -1,5 +1,5 @@
 # EXPECTS:  <NONE>
-# PROVIDES: metrics_exp_http_threadpool
+# PROVIDES: metrics_unprocessed_exp_http_threadpool
 
 sources:
   private_metrics_exp_http_threadpool_raw:
@@ -20,7 +20,7 @@ transforms:
     source: |-
       .isLowOnThreads = if .isLowOnThreads == true { 1 } else { 0 }
 
-  metrics_exp_http_threadpool:
+  metrics_unprocessed_exp_http_threadpool:
     type: log_to_metric
     inputs:
       - private_metrics_exp_http_threadpool_remap

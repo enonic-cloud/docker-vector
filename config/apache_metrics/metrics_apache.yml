@@ -1,5 +1,5 @@
 # EXPECTS:  <NONE>
-# PROVIDES: metrics_apache
+# PROVIDES: metrics_unprocessed_apache
 
 sources:
   private_metrics_apache_raw:
@@ -9,7 +9,7 @@ sources:
     scrape_interval_secs: ${APACHE_SCRAPE_INTERVAL:-30}
 
 transforms:
-  metrics_apache:
+  metrics_unprocessed_apache:
     type: remap
     drop_on_error: true
     inputs:

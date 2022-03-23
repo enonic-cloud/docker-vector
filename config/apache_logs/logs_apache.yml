@@ -1,5 +1,5 @@
 # EXPECTS:  <NONE>
-# PROVIDES: logs_apache
+# PROVIDES: logs_unprocessed_apache
 
 sources:
   private_logs_apache_orginal:
@@ -15,7 +15,7 @@ transforms:
     source: |-
       .namespace = "apache"
 
-  logs_apache:
+  logs_unprocessed_apache:
     type: remap
     inputs:
       - private_logs_apache_basic
