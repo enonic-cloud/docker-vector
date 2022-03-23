@@ -28,6 +28,7 @@ transforms:
       .size = .parsed.size
       .status = .parsed.status
       .message = .parsed.message
+      .timestamp = parse_timestamp!(.parsed.timestamp, "%+")
 
       if "${APACHE_LOG_TYPE:-common}" == "combined" {
         .agent = .parsed.agent

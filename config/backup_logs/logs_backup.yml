@@ -35,9 +35,13 @@ transforms:
       .message = strip_ansi_escape_codes!(.message)
       .parsed, err = parse_grok(.message, "%{TIMESTAMP_ISO8601:timestamp}%{SPACE}%{LOGLEVEL:level}%{SPACE}\\-%{SPACE}(?<message>(.|\r|\n)*)")
 
-      if err == null {
-        .message = .parsed.message
-        .level = .parsed.level
-      }
+      .message = .parsed.message
+      .level = .parsed.level
 
+      if length!(.parsed.timestamp) == 22 {
+        .parsed.timestamp, err = .parsed.timestamp + "0"
+      }
+      .parsed.timestamp = .parsed.timestamp + "Z"
+      .timestamp = parse_timestamp!(.parsed.timestamp, "%+")
+      
       del(.parsed)

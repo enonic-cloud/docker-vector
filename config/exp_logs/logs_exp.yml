@@ -30,4 +30,6 @@ transforms:
       .message = .parsed.message
       .class = .parsed.class
       .level = .parsed.level
+      .timestamp = parse_timestamp!(.parsed.timestamp, "%F %T,%3f")
+
       del(.parsed)
